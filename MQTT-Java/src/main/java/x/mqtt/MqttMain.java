@@ -57,11 +57,11 @@ public class MqttMain {
 
   public void start() throws Exception {
     connectMQTT();
-    int loops = 1000;
+    int loops = 100000;
     long start = System.currentTimeMillis();
     for (int u = 0; u < loops; u++) {
       sendMessage("Hallo Welt! => " + u + " | " + System.currentTimeMillis());
-      Thread.sleep(500);
+      Thread.sleep(5);
     }
     long stop = System.currentTimeMillis();
     System.out.println("elapsed = " + (stop - start) + " / " + ((stop - start) / loops));
