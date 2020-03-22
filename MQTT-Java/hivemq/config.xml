@@ -48,6 +48,28 @@
       </subprotocols>
       <allow-extensions>true</allow-extensions>
     </websocket-listener>
+    <!--tls-websocket-listener>
+      <port>8001</port>
+      <bind-address>0.0.0.0</bind-address>
+      <path>/mqtt</path>
+      <allow-extensions>true</allow-extensions>
+      <subprotocols>
+        <subprotocol>mqttv3.1</subprotocol>
+        <subprotocol>mqtt</subprotocol>
+      </subprotocols>
+      <tls>
+        <keystore>
+          <path>../certs/hivemq.jks</path>
+          <password>mypassword</password>
+          <private-key-password>mypassword</private-key-password>
+        </keystore>
+        <truststore>
+          <path>../certs/hivemq-trust-store.jks</path>
+          <password>mypassword</password>
+        </truststore>
+        <client-authentication-mode>NONE</client-authentication-mode>
+      </tls>
+    </tls-websocket-listener-->
   </listeners>
   
   <anonymous-usage-statistics>

@@ -58,7 +58,7 @@ public class MqttMain {
 
   public void start() throws Exception {
     connectMQTT();
-    int loops = 10;
+    int loops = 1000;
     long start = System.currentTimeMillis();
     for (int u = 0; u < loops; u++) {
       sendMessage("Hallo Welt! => " + u + " | " + System.currentTimeMillis());
