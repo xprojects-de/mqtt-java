@@ -1,0 +1,76 @@
+
+1: Create Server Keystore
+
+CMD: keytool -genkey -keyalg RSA -alias hivemq -keystore hivemq.jks -storepass mypassword -validity 360 -keysize 2048
+
+This creates a Java keystore containing a certificate and private key using the RSA algorithm, a key size of 2048 bits, which is valid for 360 days.
+Make sure to use an appropriately secure password.
+
+    Enter all the necessary data for your certificate
+
+NOTE: The first question about the first and last name is the so-called common name. This common name should match the server address (URL, Load Balancer DNS name, localhost for testing purposes etc.)
+
+2: Export certificate from the keystore to a PEM file
+
+CMD: keytool -exportcert -alias hivemq -keystore hivemq.jks -rfc -file server.pem
+
+Enter PW from above!
+
+3: Generate a PEM based client certificate
+
+CMD: openssl req -x509 -newkey rsa:2048 -keyout mqtt-client-key.pem -out mqtt-client-cert.pem -days 360
+
+This creates a certificate and private key in PEM format using the RSA algorithm and a key size of 2048 bits, which are valid for 360 days.
+
+    When prompted, enter all prompted information (e.g. mypassword)
+
+This creates two PEM files: mqtt-client-key.pem and mqtt-client-cert.pem
+
+4: Export the client certificate from the PEM file into an CRT file and Key
+
+CMD: openssl x509 -outform der -in mqtt-client-cert.pem -out mqtt-client-cert.crt
+CMD: openssl rsa -in mqtt-client-key.pem -out mqtt-client-key.key
+
+5: Import the certificate into a Java KeyStore
+
+CMD: keytool -import -file mqtt-client-cert.crt -alias client -keystore hivemq-trust-store.jks -storepass mypassword
+
+Make sure that you use an appropriately secure password.
+
+We have now successfully created all necessary files.
+
+    hivemq.jks: The Java KeyStore that contains the HiveMQ server certificate that HiveMQ broker nodes present to connecting MQTT clients and to each other for internal communication
+    mqtt-client-key.pem and mqtt-client-cert.pem: The certificate and private key pair in PEM format for our MQTT client
+    hivemq-trust-store.jks: The truststore that HiveMQ needs to trust the certificate that the client presents
+
+NOTE: In production, we recommend using client and server certificates that are signed by a trusted CA or the internal CA of your company. To create individual client certificates for IoT devices, create an intermediary from your ROOT CA and sign individual certificates with this intermediary. Make sure that clients present the entire certificate change on connection, this way, you only need to include your ROOT certificate in the HiveMQ truststore. Feel free to contact us, for additional guidance on certificate management.
+
+Configuring HiveMQ appropriately
+
+What’s left to do is using and configuring the created files appropriately. We will use a high-availability HiveMQ cluster that is hosted on AWS with an AWS network load balancer in front. You can follow this guide to set up your own HiveMQ cluster in the cloud.
+
+    Copy both Java KeyStores (hivemq.jks and hivemq-trust-store.jks) to the /opt/hivemq/conf/ folder of all of your HiveMQ nodes
+    Configure your TCP lister as a secured TCP listener over TLS
+
+<listeners>
+    <tls-tcp-listener>
+        <port>1883</port>
+        <bind-address>0.0.0.0</bind-address>
+        <proxy-protocol>true</proxy-protocol>
+        <tls>
+            <keystore>
+                <path>/opt/hivemq/conf/hivemq.jks</path>
+                <password>changeme</password>
+                <private-key-password>changeme</private-key-password>
+            </keystore>
+            <client-authentication-mode>REQUIRED</client-authentication-mode>
+            <truststore>
+                <path>/opt/hivemq/conf/hivemq-trust-store.jks</path>
+                <password>changeme</password>
+            </truststore>
+        </tls>
+    </tls-tcp-listener>
+</listeners>
+
+Notice that we set the client-authentication-mode to REQUIRED. This setting ensures that only MQTT clients that use a certificate that is part of the configured truststore are allowed to connect. More details on configuring a TLS-secured TCP listener can be found in the HiveMQ User Guide.
+
