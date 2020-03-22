@@ -8,6 +8,7 @@ public class MqttMain {
 
   private static final String MQTTHOST = "localhost";
   private static final int MQTTPORT = 1883;
+  private static final int MQTTPORTTLS = 8883;
 
   private final MyMqttClient mqttSender = new MyMqttClient();
   private final MyMqttClient mqttListener = new MyMqttClient();
@@ -16,10 +17,10 @@ public class MqttMain {
 
   private void connectMQTT() throws Exception {
     if (mqttSender.isConnected() == false) {
-      mqttSender.connect("spex_" + System.currentTimeMillis(), MQTTHOST, MQTTPORT);
+      mqttSender.connect("spex_" + System.currentTimeMillis(), MQTTHOST, MQTTPORTTLS, true);
     }
     if (mqttListener.isConnected() == false) {
-      mqttListener.connect("spex1_" + System.currentTimeMillis(), MQTTHOST, MQTTPORT);
+      mqttListener.connect("spex1_" + System.currentTimeMillis(), MQTTHOST, MQTTPORTTLS, true);
       mqttListener.subscribe(testTopic, (String topic, MqttMessage message) -> {
         System.out.println("---------------------------------------");
         String msg = new String(message.getPayload());
@@ -57,7 +58,7 @@ public class MqttMain {
 
   public void start() throws Exception {
     connectMQTT();
-    int loops = 100000;
+    int loops = 10;
     long start = System.currentTimeMillis();
     for (int u = 0; u < loops; u++) {
       sendMessage("Hallo Welt! => " + u + " | " + System.currentTimeMillis());

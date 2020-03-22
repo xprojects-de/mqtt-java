@@ -18,10 +18,26 @@
 <hivemq>
 
   <listeners>
-    <tcp-listener>
+    <!--tcp-listener>
       <port>1883</port>
       <bind-address>0.0.0.0</bind-address>
-    </tcp-listener>
+    </tcp-listener-->
+    <tls-tcp-listener>
+      <port>8883</port>
+      <bind-address>0.0.0.0</bind-address>
+      <tls>
+        <keystore>
+          <path>../certs/hivemq.jks</path>
+          <password>mypassword</password>
+          <private-key-password>mypassword</private-key-password>
+        </keystore>
+        <truststore>
+          <path>../certs/hivemq-trust-store.jks</path>
+          <password>mypassword</password>
+        </truststore>
+        <client-authentication-mode>REQUIRED</client-authentication-mode>
+      </tls>
+    </tls-tcp-listener>
     <websocket-listener>
       <port>8000</port>
       <bind-address>0.0.0.0</bind-address>

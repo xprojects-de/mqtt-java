@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import x.mqtt.SslUtil;
 
 public class MyMqttClient {
 
@@ -14,7 +15,7 @@ public class MyMqttClient {
 
   public static final int QOS = 1;
 
-  public void connect(String clientId, String host, int port, String user, char[] password) throws MqttException {
+  public void connect(String clientId, String host, int port, String user, char[] password, boolean ssl_tls) throws Exception {
     MqttConnectOptions connOpts = getConnOpts();
     if (connOpts == null) {
       connOpts = new MqttConnectOptions();
@@ -22,10 +23,10 @@ public class MyMqttClient {
     connOpts.setUserName(user);
     connOpts.setPassword(password);
     setConnOpts(connOpts);
-    connect(clientId, host, port);
+    connect(clientId, host, port, ssl_tls);
   }
 
-  public void connect(String clientId, String host, int port) throws MqttException {
+  public void connect(String clientId, String host, int port, boolean ssl_tls) throws Exception {
     if (this.mqttClient != null) {
       if (this.mqttClient.isConnected()) {
         try {
@@ -36,16 +37,22 @@ public class MyMqttClient {
       }
     }
 
-    String broker = "tcp://" + host + ":" + port;
-    MemoryPersistence persistence = new MemoryPersistence();
-
-    //set default connection options for mqtt client
     MqttConnectOptions connOpts = getConnOpts();
     if (connOpts == null) {
       connOpts = new MqttConnectOptions();
     }
+    String broker = "tcp://" + host + ":" + port;
+    if (ssl_tls == true) {
+      broker = "ssl://" + host + ":" + port;
+      String caFilePath = "/Users/xprojects/Documents/Github/mqtt-java/MQTT-Java/hivemq/certs/server.pem";
+      String clientCrtFilePath = "/Users/xprojects/Documents/Github/mqtt-java/MQTT-Java/hivemq/certs/mqtt-client-cert.pem";
+      String clientKeyFilePath = "/Users/xprojects/Documents/Github/mqtt-java/MQTT-Java/hivemq/certs/mqtt-client-key.key";
+      String pw = "mypassword";
+      connOpts.setSocketFactory(SslUtil.getSocketFactory(caFilePath, clientCrtFilePath, clientKeyFilePath, pw));
+    }
     connOpts.setCleanSession(true);
 
+    MemoryPersistence persistence = new MemoryPersistence();
     this.mqttClient = new MqttClient(broker, clientId, persistence);
     try {
       mqttClient.connect(connOpts);
@@ -130,4 +137,5 @@ public class MyMqttClient {
   public String generateClientId() {
     return MqttClient.generateClientId();
   }
+
 }
