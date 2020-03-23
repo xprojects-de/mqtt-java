@@ -17,6 +17,7 @@ public class MqttMain {
   private final MyMqttClient mqttListener = new MyMqttClient();
 
   private final String testTopic = "topic/test";
+  private int rCounter = 0;
 
   private void connectMQTT() throws Exception {
     if (mqttSender.isConnected() == false) {
@@ -25,16 +26,20 @@ public class MqttMain {
     if (mqttListener.isConnected() == false) {
       mqttListener.connect("spex1_" + System.currentTimeMillis(), MQTTHOST, (SSL == true ? MQTTPORTTLS : MQTTPORT), USERNAME, PW, SSL);
       mqttListener.subscribe(testTopic, (String topic, MqttMessage message) -> {
-        System.out.println("---------------------------------------");
-        String msg = new String(message.getPayload());
-        System.out.println("Message arrived --> Topic: " + topic + " | Message: " + msg + "<>" + System.currentTimeMillis());
-        try {
-          ObjectMapper mapper = new ObjectMapper();
-          Message m = mapper.readValue(msg, Message.class);
-          System.out.println("Error: " + m.isError() + " Msg: " + m.getMsg());
-        } catch (Exception e) {
-          e.printStackTrace();
+        if (rCounter % 500 == 0) {
+          System.out.println("---------------------------------------");
+          String msg = new String(message.getPayload());
+          System.out.println("Message arrived --> Topic: " + topic + " | Message: " + msg + "<>" + System.currentTimeMillis());
+          try {
+            ObjectMapper mapper = new ObjectMapper();
+            Message m = mapper.readValue(msg, Message.class);
+            System.out.println("Error: " + m.isError() + " Msg: " + m.getMsg());
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+          rCounter = 0;
         }
+        rCounter++;
       });
     }
   }
@@ -61,7 +66,7 @@ public class MqttMain {
 
   public void start() throws Exception {
     connectMQTT();
-    int loops = 10000;
+    int loops = 25000;
     long start = System.currentTimeMillis();
     for (int u = 0; u < loops; u++) {
       sendMessage("Hallo Welt! => " + u + " | " + System.currentTimeMillis());
