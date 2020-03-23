@@ -15,13 +15,13 @@ public class MyMqttClient {
 
   public static final int QOS = 1;
 
-  public void connect(String clientId, String host, int port, String user, char[] password, boolean ssl_tls) throws Exception {
+  public void connect(String clientId, String host, int port, String user, String password, boolean ssl_tls) throws Exception {
     MqttConnectOptions connOpts = getConnOpts();
     if (connOpts == null) {
       connOpts = new MqttConnectOptions();
     }
     connOpts.setUserName(user);
-    connOpts.setPassword(password);
+    connOpts.setPassword(password.toCharArray());
     setConnOpts(connOpts);
     connect(clientId, host, port, ssl_tls);
   }
