@@ -16,7 +16,6 @@
 -->
 
 <hivemq>
-
   <listeners>
     <tcp-listener>
       <port>1883</port>
@@ -48,7 +47,7 @@
       </subprotocols>
       <allow-extensions>true</allow-extensions>
     </websocket-listener>
-    <!--tls-websocket-listener>
+    <tls-websocket-listener>
       <port>8001</port>
       <bind-address>0.0.0.0</bind-address>
       <path>/mqtt</path>
@@ -63,17 +62,8 @@
           <password>mypassword</password>
           <private-key-password>mypassword</private-key-password>
         </keystore>
-        <truststore>
-          <path>../certs/hivemq-trust-store.jks</path>
-          <password>mypassword</password>
-        </truststore>
         <client-authentication-mode>NONE</client-authentication-mode>
       </tls>
-    </tls-websocket-listener-->
+    </tls-websocket-listener>
   </listeners>
-  
-  <anonymous-usage-statistics>
-    <enabled>true</enabled>
-  </anonymous-usage-statistics>
-
 </hivemq>
