@@ -1,0 +1,23 @@
+<?php $this->extend('block_searchable'); ?>
+
+<?php $this->block('content'); ?>
+
+<ul>
+  <?php foreach ($this->files as $file): ?>
+
+    <?php
+    $meta = \XProjects\Filesmeta\FilesmetaUtils::getMeta($file['id']);
+    // $meta['filesmetaimage'] and $meta['filesmetatext']
+    ?>
+
+    <li class="download-element ext-<?= $file['extension'] ?>">
+      <?php if ($meta['filesmetaimage'] != ""): ?>
+        <div class="coverimage"><img src="<?= $meta['filesmetaimage'] ?>" alt="<?= $file['title'] ?>"/></div>
+      <?php endif; ?>
+      <a href="<?= $file['href'] ?>" title="<?= $file['title'] ?>" type="<?= $file['mime'] ?>"><?= $file['link'] ?> <span class="size">(<?= $file['filesize'] ?>)</span></a>
+    </li>
+  <?php endforeach; ?>
+</ul>
+
+<?php $this->endblock(); ?>
+ 
