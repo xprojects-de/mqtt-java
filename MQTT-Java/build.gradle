@@ -5,10 +5,10 @@ apply plugin: 'application'
 group = 'x.mqtt'
 sourceCompatibility = 1.11
 
-mainClassName = 'x.mqtt.MqttMain'
+mainClassName = 'x.mqtt.TestFrame'
 
 application {
-  mainClassName 'x.mqtt.MqttMain'
+  mainClassName 'x.mqtt.TestFrame'
 }
 
 repositories {
@@ -29,7 +29,7 @@ jar {
   manifest {
     attributes(
       'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
-      'Main-Class': 'x.mqtt.MqttMain'
+      'Main-Class': 'x.mqtt.TestFrame'
     )
   }
   from (configurations.compile.collect { entry -> zipTree(entry) }) {

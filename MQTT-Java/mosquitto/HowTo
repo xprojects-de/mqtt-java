@@ -1,0 +1,109 @@
+
+1. Server: apt install mosquitto
+2. Client to test: apt install mosquitto-clients
+3. Check service: systemctl status mosquitto.service and systemctl restart mosquitto.service
+4. Test
+   mosquitto_sub -h localhost -t test
+   mosquitto_pub -h localhost -t test -m "hello world"
+
+5. Generate user
+   => mosquitto_passwd /etc/mosquitto/passwd xprojects # Here you have to enter the Password like xprojects
+   => mosquitto_passwd /etc/mosquitto/passwd xy # Here you have to enter the Password like xy
+   => Do this for evey new User
+
+6. Crate new Config-File
+   => nano /etc/mosquitto/conf.d/default.conf
+
+   Add Following:
+
+----
+
+autosave_interval 1800
+connection_messages true
+log_dest stdout
+log_type error
+log_type warning
+log_type notice
+log_type information
+log_type all
+log_type debug
+log_timestamp true
+max_inflight_messages 20
+max_queued_messages 9000
+message_size_limit 10240
+# persistence true
+# persistence_location /mosquitto/config/
+# persistence_file mosquitto.db
+# persistent_client_expiration 1m
+allow_anonymous false
+password_file /etc/mosquitto/passwd
+----
+
+7. Now you can test
+   mosquitto_sub -h localhost -t test -u "spex" -P "spex"
+   mosquitto_pub -h localhost -t "test" -m "hello world" -u "spex" -P "spex"
+
+8. Configuring MQTT SSL
+   nano /etc/mosquitto/conf.d/default.conf
+
+   Add Following:
+
+----
+...
+
+listener 1883 localhost
+
+# listener 8883
+# certfile /etc/letsencrypt/live/mqtt.example.com/cert.pem
+# cafile /etc/letsencrypt/live/mqtt.example.com/chain.pem
+# keyfile /etc/letsencrypt/live/mqtt.example.com/privkey.pem
+----
+
+9. Addung Websocket
+
+----
+...
+
+listener 8083
+protocol websockets
+# certfile /etc/letsencrypt/live/mqtt.example.com/cert.pem
+# cafile /etc/letsencrypt/live/mqtt.example.com/chain.pem
+# keyfile /etc/letsencrypt/live/mqtt.example.com/privkey.pem
+----
+
+
+10. generate an ACL-List
+  => nano /etc/mosquitto/acl
+
+   Add Following for example:
+
+----
+topic read $SYS/#
+
+user spex
+topic readwrite #
+
+user admo
+topic readwrite test/test
+
+# user admin
+# pattern read      owntracks/#
+# pattern readwrite owntracks/+/+/cmd
+
+# This affects all clients.
+# pattern write $SYS/broker/connection/%c/state
+----
+
+11. Adding ACL to Config-File
+
+=> nano /etc/mosquitto/conf.d/default.conf
+
+   Add Following:
+
+----
+...
+allow_anonymous false
+password_file /etc/mosquitto/passwd
+acl_file /etc/mosquitto/acl
+...
+----

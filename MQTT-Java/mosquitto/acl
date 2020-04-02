@@ -1,0 +1,15 @@
+topic read $SYS/#
+
+user spex
+topic readwrite #
+
+user admo
+topic readwrite test/test
+# topic read        owntracks/user1/mobile
+
+# user admin
+# pattern read      owntracks/#
+# pattern readwrite owntracks/+/+/cmd
+
+# This affects all clients.
+# pattern write $SYS/broker/connection/%c/state

@@ -6,12 +6,15 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import x.mqtt.SslUtil;
 
 public class MyMqttClient {
 
   private MqttConnectOptions connOpts;
   private MqttClient mqttClient = null;
+  private final HashMap<String, MyMqttMessageListener> topicListeners = new HashMap<>();
 
   public static final int QOS = 1;
 
@@ -71,6 +74,7 @@ public class MyMqttClient {
   public void disconnect() {
     if (isConnected()) {
       try {
+        this.unsubscribeAll();
         mqttClient.disconnect();
       } catch (MqttException me) {
         me.printStackTrace();
@@ -109,10 +113,14 @@ public class MyMqttClient {
     }
   }
 
-  public void subscribe(String topic, IMqttMessageListener ml) {
+  public void subscribe(String topic, MyIMqttMessageListener ml) {
     try {
-      this.mqttClient.subscribe(topic, ml);
-    } catch (MqttException me) {
+      if (!this.topicListeners.containsKey(topic)) {
+        MyMqttMessageListener l = new MyMqttMessageListener(ml);
+        this.topicListeners.put(topic, l);
+        this.mqttClient.subscribe(topic, l.getMl());
+      }
+    } catch (Exception me) {
       me.printStackTrace();
     }
 
@@ -120,8 +128,32 @@ public class MyMqttClient {
 
   public void unsubscribe(String topic) {
     try {
-      this.mqttClient.unsubscribe(topic);
-    } catch (MqttException me) {
+      if (this.topicListeners.containsKey(topic)) {
+        this.mqttClient.unsubscribe(topic);
+        this.topicListeners.remove(topic);
+      }
+    } catch (Exception me) {
+      me.printStackTrace();
+    }
+  }
+
+  public void unsubscribeAll() {
+    try {
+      for (Map.Entry me : this.topicListeners.entrySet()) {
+        this.mqttClient.unsubscribe((String) me.getKey());
+      }
+      this.topicListeners.clear();
+    } catch (Exception me) {
+      me.printStackTrace();
+    }
+  }
+
+  public void setActive(String topic, boolean state) {
+    try {
+      if (this.topicListeners.containsKey(topic)) {
+        this.topicListeners.get(topic).setActive(state);
+      }
+    } catch (Exception me) {
       me.printStackTrace();
     }
   }
