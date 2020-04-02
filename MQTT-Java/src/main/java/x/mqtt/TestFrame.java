@@ -6,6 +6,8 @@
 package x.mqtt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import x.mqtt.client.MyIMqttMessageListener;
 import x.mqtt.client.MyMqttClient;
@@ -14,9 +16,10 @@ import x.mqtt.client.MyMqttClient;
  *
  * @author prokist
  */
-public class TestFrame extends javax.swing.JFrame {
+public class TestFrame extends javax.swing.JFrame implements Runnable {
 
   private static final String MQTTHOST = "localhost";
+  //private static final String MQTTHOST = "test.mosquitto.org";
   private static final int MQTTPORT = 1883;
   private static final int MQTTPORTTLS = 8883;
   private static final String USERNAME = "xprojects";
@@ -25,29 +28,20 @@ public class TestFrame extends javax.swing.JFrame {
 
   private final MyMqttClient mqttClient = new MyMqttClient();
   private MyIMqttMessageListener ml;
+  public static BlockingQueue queue = new ArrayBlockingQueue(10000);
+  public static Object mutex = new Object();
+  private Thread consumer = new Thread(this);
 
   /**
    * Creates new form TestFrame
    */
   public TestFrame() {
     initComponents();
+    consumer.start();
     ml = new MyIMqttMessageListener() {
       @Override
       public void messageArrived(String topic, MqttMessage message) throws Exception {
-        String msg = new String(message.getPayload());
-        try {
-          ObjectMapper mapper = new ObjectMapper();
-          Message m = mapper.readValue(msg, Message.class);
-          long elapsedTime = System.currentTimeMillis() - m.getTimestamp();
-          System.out.println("Elapsed: " + elapsedTime + " Retained: " + message.isRetained() + " Duplicate: " + message.isDuplicate() + " Error: " + m.isError() + " Msg: " + m.getMsg());
-          if (m.isLooptest() == false) {
-            jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + message.isRetained() + " Duplicate: " + message.isDuplicate() + " Error: " + m.isError() + " Msg: " + m.getMsg() + "\n");
-          } else {
-
-          }
-        } catch (Exception e) {
-          e.printStackTrace();
-        };
+        TestFrame.queue.put(new ReceiveMessage(message));
       }
     };
   }
@@ -281,7 +275,7 @@ public class TestFrame extends javax.swing.JFrame {
     m.setLooptest(false);
     m.setTimestamp(System.currentTimeMillis());
     var jsonInString = mapper.writeValueAsString(m);
-    mqttClient.publish(topic, jsonInString);
+    mqttClient.publish(topic, jsonInString, MyMqttClient.QOS_1, true);
   }
 
   public void sendMessageLoop(String topic, String msg, int counter) throws Exception {
@@ -293,7 +287,7 @@ public class TestFrame extends javax.swing.JFrame {
     m.setLoopcounter(counter);
     m.setTimestamp(System.currentTimeMillis());
     var jsonInString = mapper.writeValueAsString(m);
-    mqttClient.publish(topic, jsonInString);
+    mqttClient.publish(topic, jsonInString, MyMqttClient.QOS_0, false);
   }
 
   private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
@@ -418,4 +412,25 @@ public class TestFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextFieldMessage;
     private javax.swing.JTextField jTextFieldTopic;
     // End of variables declaration//GEN-END:variables
+
+  @Override
+  public void run() {
+    boolean loop = true;
+    while (loop) {
+      try {
+        ReceiveMessage rm = (ReceiveMessage) TestFrame.queue.take();
+        String msg = new String(rm.getM().getPayload());
+        ObjectMapper mapper = new ObjectMapper();
+        Message m = mapper.readValue(msg, Message.class);
+        long elapsedTime = rm.getTstamp() - m.getTimestamp();
+        System.out.println("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Msg: " + m.getMsg());
+        if (m.isLooptest() == false) {
+          jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Msg: " + m.getMsg() + "\n");
+        }
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
+
+  }
 }

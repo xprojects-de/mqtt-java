@@ -16,7 +16,9 @@ public class MyMqttClient {
   private MqttClient mqttClient = null;
   private final HashMap<String, MyMqttMessageListener> topicListeners = new HashMap<>();
 
-  public static final int QOS = 1;
+  public static final int QOS_0 = 0;
+  public static final int QOS_1 = 1;
+  public static final int QOS_2 = 2;
 
   public void connect(String clientId, String host, int port, String user, String password, boolean ssl_tls) throws Exception {
     MqttConnectOptions connOpts = getConnOpts();
@@ -82,23 +84,23 @@ public class MyMqttClient {
     }
   }
 
-  public void publish(String topic, String msg) {
+  public void publish(String topic, String msg, int QOS, boolean retained) {
     try {
-      mqttClient.publish(topic, msg.getBytes(), QOS, true);
+      mqttClient.publish(topic, msg.getBytes(), QOS, retained);
     } catch (MqttException me) {
       me.printStackTrace();
     }
   }
 
-  public void publish(String topic, byte[] msg) {
+  public void publish(String topic, byte[] msg, int QOS, boolean retained) {
     try {
-      mqttClient.publish(topic, msg, QOS, true);
+      mqttClient.publish(topic, msg, QOS, retained);
     } catch (MqttException me) {
       me.printStackTrace();
     }
   }
 
-  public void publishFile(String topic, String path) throws IOException {
+  public void publishFile(String topic, String path, int QOS, boolean retained) throws IOException {
     byte[] fileContent;
     try {
       fileContent = Files.readAllBytes(Paths.get(path));
