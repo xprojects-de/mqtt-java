@@ -6,10 +6,13 @@
 package x.mqtt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hivemq.client.mqtt.mqtt5.message.publish.Mqtt5Publish;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import x.mqtt.client.MyIMqtt5MessageListener;
 import x.mqtt.client.MyIMqttMessageListener;
+import x.mqtt.client.MyMqtt5Client;
 import x.mqtt.client.MyMqttClient;
 
 /**
@@ -26,8 +29,9 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
   private static final String PW = "xprojects";
   private static final boolean SSL = false;
 
-  private final MyMqttClient mqttClient = new MyMqttClient();
+  private final MyMqtt5Client mqttClient = new MyMqtt5Client();
   private MyIMqttMessageListener ml;
+  private MyIMqtt5MessageListener ml5;
   public static BlockingQueue queue = new ArrayBlockingQueue(10000);
   public static Object mutex = new Object();
   private Thread consumer = new Thread(this);
@@ -42,6 +46,12 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
       @Override
       public void messageArrived(String topic, MqttMessage message) throws Exception {
         TestFrame.queue.put(new ReceiveMessage(message));
+      }
+    };
+    ml5 = new MyIMqtt5MessageListener() {
+      @Override
+      public void messageArrived(Mqtt5Publish message) throws Exception {
+        TestFrame.queue.put(new ReceiveMessage5(message));
       }
     };
   }
@@ -355,7 +365,8 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
 
   private void jButtonTopicSubscribeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTopicSubscribeActionPerformed
     int qos = getQoS((String) jComboBoxQoSSubscribe.getSelectedItem());
-    mqttClient.subscribe(jTextFieldTopic.getText(), qos, this.ml);
+    //mqttClient.subscribe(jTextFieldTopic.getText(), qos, this.ml);
+    mqttClient.subscribe(jTextFieldTopic.getText(), qos, this.ml5);
   }//GEN-LAST:event_jButtonTopicSubscribeActionPerformed
 
   private void jButtonTopicUnsubscribeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonTopicUnsubscribeActionPerformed
@@ -382,7 +393,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           int loops = Integer.parseInt(jTextFieldLoopTestLoops.getText());
           int delay = Integer.parseInt(jTextFieldLoopTestDelay.getText());
           String topic = jTextFieldTopic.getText();
-          int qos = getQoS((String) jComboBoxQoSLoop.getSelectedItem());          
+          int qos = getQoS((String) jComboBoxQoSLoop.getSelectedItem());
           byte[] t = new byte[Integer.parseInt(jTextFieldBytesSize.getText())];
           for (int k = 0; k < loops; k++) {
             sendMessageLoop(topic, qos, ("Looptest " + k), (k + 1), t);
@@ -468,14 +479,25 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     boolean loop = true;
     while (loop) {
       try {
-        ReceiveMessage rm = (ReceiveMessage) TestFrame.queue.take();
-        String msg = new String(rm.getM().getPayload());
-        ObjectMapper mapper = new ObjectMapper();
-        Message m = mapper.readValue(msg, Message.class);
-        long elapsedTime = rm.getTstamp() - m.getTimestamp();
-        System.out.println("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg());
-        if (m.isLooptest() == false) {
-          jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
+        Object rm = (Object) TestFrame.queue.take();
+        if (rm instanceof ReceiveMessage) {
+          String msg = new String(((ReceiveMessage) rm).getM().getPayload());
+          ObjectMapper mapper = new ObjectMapper();
+          Message m = mapper.readValue(msg, Message.class);
+          long elapsedTime = ((ReceiveMessage) rm).getTstamp() - m.getTimestamp();
+          System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage) rm).getM().isRetained() + " Duplicate: " + ((ReceiveMessage) rm).getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg());
+          if (m.isLooptest() == false) {
+            jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage) rm).getM().isRetained() + " Duplicate: " + ((ReceiveMessage) rm).getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
+          }
+        } else if (rm instanceof ReceiveMessage5) {
+          String msg = new String(((ReceiveMessage5) rm).getM().getPayloadAsBytes());
+          ObjectMapper mapper = new ObjectMapper();
+          Message m = mapper.readValue(msg, Message.class);
+          long elapsedTime = ((ReceiveMessage5) rm).getTstamp() - m.getTimestamp();
+          System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg());
+          if (m.isLooptest() == false) {
+            jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
+          }
         }
       } catch (Exception e) {
         e.printStackTrace();

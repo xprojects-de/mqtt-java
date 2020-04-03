@@ -23,6 +23,7 @@ dependencies {
   compile 'org.bouncycastle:bcpkix-jdk15on:1.64'
   compile 'org.bouncycastle:bcprov-jdk15on:1.64'
   compile group: 'org.eclipse.paho', name: 'org.eclipse.paho.client.mqttv3', version: '1.2.2'
+  compile group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.1.4'
 }
 
 jar {
