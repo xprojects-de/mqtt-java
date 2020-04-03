@@ -77,6 +77,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     jComboBoxQoSSubscribe = new javax.swing.JComboBox<>();
     jComboBoxQoSLoop = new javax.swing.JComboBox<>();
     jComboBoxQoSSend = new javax.swing.JComboBox<>();
+    jTextFieldBytesSize = new javax.swing.JTextField();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,6 +162,13 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
 
     jComboBoxQoSSend.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "QoS_0", "QoS_1", "QoS_2" }));
 
+    jTextFieldBytesSize.setText("1024");
+    jTextFieldBytesSize.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jTextFieldBytesSizeActionPerformed(evt);
+      }
+    });
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
@@ -170,6 +178,8 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
           .addGroup(jPanel1Layout.createSequentialGroup()
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jTextFieldBytesSize, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jComboBoxQoSLoop, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jTextFieldLoopTestLoops, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -235,7 +245,8 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           .addComponent(jButtonLoopTest)
           .addComponent(jTextFieldLoopTestLoops, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jTextFieldLoopTestDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jComboBoxQoSLoop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jComboBoxQoSLoop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jTextFieldBytesSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(18, 18, 18)
         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(45, 45, 45))
@@ -304,7 +315,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     mqttClient.publish(topic, jsonInString, qos, true);
   }
 
-  public void sendMessageLoop(String topic, int qos, String msg, int counter) throws Exception {
+  public void sendMessageLoop(String topic, int qos, String msg, int counter, byte[] t) throws Exception {
     ObjectMapper mapper = new ObjectMapper();
     Message m = new Message();
     m.setError(false);
@@ -312,6 +323,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     m.setLooptest(true);
     m.setLoopcounter(counter);
     m.setTimestamp(System.currentTimeMillis());
+    m.setPayload(t);
     var jsonInString = mapper.writeValueAsString(m);
     mqttClient.publish(topic, jsonInString, qos, false);
   }
@@ -370,9 +382,10 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           int loops = Integer.parseInt(jTextFieldLoopTestLoops.getText());
           int delay = Integer.parseInt(jTextFieldLoopTestDelay.getText());
           String topic = jTextFieldTopic.getText();
-          int qos = getQoS((String) jComboBoxQoSLoop.getSelectedItem());
+          int qos = getQoS((String) jComboBoxQoSLoop.getSelectedItem());          
+          byte[] t = new byte[Integer.parseInt(jTextFieldBytesSize.getText())];
           for (int k = 0; k < loops; k++) {
-            sendMessageLoop(topic, qos, ("Looptest " + k), (k + 1));
+            sendMessageLoop(topic, qos, ("Looptest " + k), (k + 1), t);
             if (delay > 0) {
               Thread.sleep(delay);
             }
@@ -384,6 +397,10 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     });
     t.start();
   }//GEN-LAST:event_jButtonLoopTestActionPerformed
+
+  private void jTextFieldBytesSizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldBytesSizeActionPerformed
+    // TODO add your handling code here:
+  }//GEN-LAST:event_jTextFieldBytesSizeActionPerformed
 
   /**
    * @param args the command line arguments
@@ -439,6 +456,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JTabbedPane jTabbedPane1;
   private javax.swing.JTextArea jTextAreaLog;
+  private javax.swing.JTextField jTextFieldBytesSize;
   private javax.swing.JTextField jTextFieldLoopTestDelay;
   private javax.swing.JTextField jTextFieldLoopTestLoops;
   private javax.swing.JTextField jTextFieldMessage;
@@ -455,9 +473,9 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
         ObjectMapper mapper = new ObjectMapper();
         Message m = mapper.readValue(msg, Message.class);
         long elapsedTime = rm.getTstamp() - m.getTimestamp();
-        System.out.println("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Msg: " + m.getMsg());
+        System.out.println("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg());
         if (m.isLooptest() == false) {
-          jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Msg: " + m.getMsg() + "\n");
+          jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + rm.getM().isRetained() + " Duplicate: " + rm.getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
         }
       } catch (Exception e) {
         e.printStackTrace();

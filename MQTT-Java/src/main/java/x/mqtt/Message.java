@@ -7,6 +7,7 @@ public class Message {
   private long timestamp = 0;
   private boolean looptest = false;
   private int loopcounter = 0;
+  private byte[] payload;
 
   public void setMsg(String msg) {
     this.msg = msg;
@@ -47,4 +48,14 @@ public class Message {
   public void setTimestamp(long timestamp) {
     this.timestamp = timestamp;
   }
+
+  public byte[] getPayload() {
+    return payload;
+  }
+
+  public void setPayload(byte[] payload) {
+    this.payload = payload;
+  }
+  
+  
 }
