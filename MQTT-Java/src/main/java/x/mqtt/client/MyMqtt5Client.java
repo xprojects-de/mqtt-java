@@ -12,6 +12,22 @@ public class MyMqtt5Client {
   public static final MqttQos QOS_1 = MqttQos.AT_LEAST_ONCE;
   public static final MqttQos QOS_2 = MqttQos.EXACTLY_ONCE;
 
+  public void connect(String clientId, String host, int port, boolean ssl_tls) throws Exception {
+    if (this.mqttClient == null) {
+      this.mqttClient = MqttClient.builder()
+              .identifier(clientId)
+              .serverHost(host)
+              .serverPort(port)
+              .useMqttVersion5()
+              .buildAsync();
+      this.mqttClient.connectWith()
+              .send()
+              .whenComplete((connAck, throwable) -> {
+                System.out.println("connected");
+              });
+    }
+  }
+  
   public void connect(String clientId, String host, int port, String user, String password, boolean ssl_tls) throws Exception {
     if (this.mqttClient == null) {
       this.mqttClient = MqttClient.builder()
