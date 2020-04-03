@@ -88,6 +88,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     jComboBoxQoSLoop = new javax.swing.JComboBox<>();
     jComboBoxQoSSend = new javax.swing.JComboBox<>();
     jTextFieldBytesSize = new javax.swing.JTextField();
+    jCheckBoxBinary = new javax.swing.JCheckBox();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -179,15 +180,19 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
       }
     });
 
+    jCheckBoxBinary.setText("binary");
+
     javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
     jPanel1.setLayout(jPanel1Layout);
     jPanel1Layout.setHorizontalGroup(
       jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
       .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 809, Short.MAX_VALUE)
-      .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-          .addGroup(jPanel1Layout.createSequentialGroup()
+      .addGroup(jPanel1Layout.createSequentialGroup()
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
             .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jCheckBoxBinary)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jTextFieldBytesSize, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jComboBoxQoSLoop, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -197,7 +202,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
             .addComponent(jTextFieldLoopTestDelay, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addComponent(jButtonLoopTest))
-          .addGroup(jPanel1Layout.createSequentialGroup()
+          .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
             .addGap(83, 83, 83)
             .addComponent(jTextFieldTopic)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -209,12 +214,15 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
             .addComponent(jButtonTopicDisable)
             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButtonTopicEnable)))
+            .addComponent(jButtonTopicEnable))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jComboBoxQoSSend, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+              .addComponent(jButtonClear))
+            .addGap(0, 0, Short.MAX_VALUE)))
         .addContainerGap())
-      .addGroup(jPanel1Layout.createSequentialGroup()
-        .addContainerGap()
-        .addComponent(jComboBoxQoSSend, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
       .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
           .addContainerGap()
@@ -225,7 +233,6 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
               .addComponent(jTextFieldMessage))
             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
               .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jButtonClear)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                   .addComponent(jButtonConnect)
                   .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -250,15 +257,18 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           .addComponent(jComboBoxQoSSubscribe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         .addGap(50, 50, 50)
         .addComponent(jComboBoxQoSSend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(jButtonLoopTest)
           .addComponent(jTextFieldLoopTestLoops, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jTextFieldLoopTestDelay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
           .addComponent(jComboBoxQoSLoop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-          .addComponent(jTextFieldBytesSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addComponent(jTextFieldBytesSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+          .addComponent(jCheckBoxBinary))
         .addGap(18, 18, 18)
-        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+        .addComponent(jButtonClear)
+        .addGap(17, 17, 17)
+        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addGap(45, 45, 45))
       .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel1Layout.createSequentialGroup()
@@ -274,9 +284,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
             .addComponent(jLabel1))
           .addGap(18, 18, 18)
           .addComponent(jButtonSend)
-          .addGap(13, 13, 13)
-          .addComponent(jButtonClear)
-          .addGap(316, 316, 316)))
+          .addGap(354, 354, 354)))
     );
 
     jTabbedPane1.addTab("MQTT", jPanel1);
@@ -338,6 +346,32 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     mqttClient.publish(topic, jsonInString, qos, false);
   }
 
+  public static byte[] longToBytes(long l) {
+    byte[] result = new byte[8];
+    for (int i = 7; i >= 0; i--) {
+      result[i] = (byte) (l & 0xFF);
+      l >>= 8;
+    }
+    return result;
+  }
+
+  public static long bytesToLong(final byte[] bytes, final int offset) {
+    long result = 0;
+    for (int i = offset; i < Long.BYTES + offset; i++) {
+      result <<= Long.BYTES;
+      result |= (bytes[i] & 0xFF);
+    }
+    return result;
+  }
+
+  public void sendMessageBinary(String topic, int qos, byte[] t) throws Exception {
+    t[0] = (byte) 0xAC;
+    t[1] = (byte) 0xDC;
+    byte[] tstamp = TestFrame.longToBytes(System.currentTimeMillis());
+    System.arraycopy(tstamp, 0, t, 2, tstamp.length);
+    mqttClient.publish(topic, t, qos, false);
+  }
+
   private void jButtonSendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendActionPerformed
     try {
       int qos = getQoS((String) jComboBoxQoSSend.getSelectedItem());
@@ -395,8 +429,13 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           String topic = jTextFieldTopic.getText();
           int qos = getQoS((String) jComboBoxQoSLoop.getSelectedItem());
           byte[] t = new byte[Integer.parseInt(jTextFieldBytesSize.getText())];
+          boolean binary = jCheckBoxBinary.isSelected();
           for (int k = 0; k < loops; k++) {
-            sendMessageLoop(topic, qos, ("Looptest " + k), (k + 1), t);
+            if (binary) {
+              sendMessageBinary(topic, qos, t);
+            } else {
+              sendMessageLoop(topic, qos, ("Looptest " + k), (k + 1), t);
+            }
             if (delay > 0) {
               Thread.sleep(delay);
             }
@@ -458,6 +497,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
   private javax.swing.JButton jButtonTopicEnable;
   private javax.swing.JButton jButtonTopicSubscribe;
   private javax.swing.JButton jButtonTopicUnsubscribe;
+  private javax.swing.JCheckBox jCheckBoxBinary;
   private javax.swing.JComboBox<String> jComboBoxQoSLoop;
   private javax.swing.JComboBox<String> jComboBoxQoSSend;
   private javax.swing.JComboBox<String> jComboBoxQoSSubscribe;
@@ -490,13 +530,19 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
             jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage) rm).getM().isRetained() + " Duplicate: " + ((ReceiveMessage) rm).getM().isDuplicate() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
           }
         } else if (rm instanceof ReceiveMessage5) {
-          String msg = new String(((ReceiveMessage5) rm).getM().getPayloadAsBytes());
-          ObjectMapper mapper = new ObjectMapper();
-          Message m = mapper.readValue(msg, Message.class);
-          long elapsedTime = ((ReceiveMessage5) rm).getTstamp() - m.getTimestamp();
-          System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg());
-          if (m.isLooptest() == false) {
-            jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
+          byte[] t = ((ReceiveMessage5) rm).getM().getPayloadAsBytes();
+          if (t[0] == (byte) 0xac && t[1] == (byte) 0xdc) {
+            long elapsedTime = ((ReceiveMessage5) rm).getTstamp() - TestFrame.bytesToLong(t, 2);
+            System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Bytes: " + t.length);
+          } else {
+            String msg = new String(t);
+            ObjectMapper mapper = new ObjectMapper();
+            Message m = mapper.readValue(msg, Message.class);
+            long elapsedTime = ((ReceiveMessage5) rm).getTstamp() - m.getTimestamp();
+            System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg());
+            if (m.isLooptest() == false) {
+              jTextAreaLog.append("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Error: " + m.isError() + " Bytes: " + msg.getBytes().length + " Msg: " + m.getMsg() + "\n");
+            }
           }
         }
       } catch (Exception e) {

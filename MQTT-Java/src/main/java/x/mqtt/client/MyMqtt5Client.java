@@ -4,10 +4,6 @@ import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5AsyncClient;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public class MyMqtt5Client {
 
   private Mqtt5AsyncClient mqttClient = null;
@@ -66,24 +62,23 @@ public class MyMqtt5Client {
     }
   }
 
-  public void publish(String topic, byte[] msg, MqttQos QOS, boolean retained) {
+  public void publish(String topic, byte[] msg, int QOS, boolean retained) {
     try {
-      mqttClient.publishWith().topic(topic).qos(QOS).retain(retained).payload(msg).send();
+      MqttQos QOS_final = MyMqtt5Client.QOS_0;
+      if (QOS == 1) {
+        QOS_final = MyMqtt5Client.QOS_1;
+      } else if (QOS == 1) {
+        QOS_final = MyMqtt5Client.QOS_2;
+      }
+      mqttClient.publishWith().topic(topic).qos(QOS_final).retain(retained).payload(msg).send();
     } catch (Exception me) {
       me.printStackTrace();
     }
   }
 
-  public void publishFile(String topic, String path, MqttQos QOS, boolean retained) throws IOException {
-    byte[] fileContent;
+  public void publish(String topic, byte[] msg, MqttQos QOS, boolean retained) {
     try {
-      fileContent = Files.readAllBytes(Paths.get(path));
-    } catch (IOException e) {
-      throw e;
-    }
-
-    try {
-      mqttClient.publishWith().topic(topic).qos(QOS).retain(retained).payload(fileContent).send();
+      mqttClient.publishWith().topic(topic).qos(QOS).retain(retained).payload(msg).send();
     } catch (Exception me) {
       me.printStackTrace();
     }

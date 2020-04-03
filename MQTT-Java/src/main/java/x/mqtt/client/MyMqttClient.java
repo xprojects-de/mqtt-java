@@ -100,21 +100,6 @@ public class MyMqttClient {
     }
   }
 
-  public void publishFile(String topic, String path, int QOS, boolean retained) throws IOException {
-    byte[] fileContent;
-    try {
-      fileContent = Files.readAllBytes(Paths.get(path));
-    } catch (IOException e) {
-      throw e;
-    }
-
-    try {
-      mqttClient.publish(topic, fileContent, QOS, true);
-    } catch (MqttException me) {
-      me.printStackTrace();
-    }
-  }
-
   public void subscribe(String topic, int QOS, MyIMqttMessageListener ml) {
     try {
       if (!this.topicListeners.containsKey(topic)) {
