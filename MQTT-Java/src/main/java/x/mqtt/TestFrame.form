@@ -59,13 +59,38 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jScrollPane1" alignment="0" pref="809" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="jTextFieldLoopTestLoops" min="-2" pref="165" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                      <Component id="jTextFieldLoopTestDelay" min="-2" pref="165" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jButtonLoopTest" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jComboBoxQoSLoop" min="-2" pref="98" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jTextFieldLoopTestLoops" min="-2" pref="165" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                              <Component id="jTextFieldLoopTestDelay" min="-2" pref="165" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="jButtonLoopTest" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
+                              <Component id="jTextFieldTopic" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jComboBoxQoSSubscribe" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonTopicSubscribe" min="-2" pref="105" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonTopicUnsubscribe" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonTopicDisable" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButtonTopicEnable" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jComboBoxQoSSend" min="-2" pref="108" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
@@ -76,7 +101,6 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jTextFieldMessage" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="jButtonSend" alignment="1" max="32767" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="jButtonClear" min="-2" max="-2" attributes="0"/>
@@ -85,21 +109,13 @@
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="jButtonDisconnect" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                                          <Component id="jTextFieldTopic" min="-2" pref="259" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jButtonTopicSubscribe" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jButtonTopicUnsubscribe" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jButtonTopicDisable" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="jButtonTopicEnable" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="jLabel2" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="92" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="610" max="32767" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <Component id="jButtonSend" min="-2" pref="682" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -110,11 +126,23 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="165" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jButtonTopicEnable" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonTopicDisable" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonTopicUnsubscribe" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButtonTopicSubscribe" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextFieldTopic" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jComboBoxQoSSubscribe" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+                      <Component id="jComboBoxQoSSend" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="11" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButtonLoopTest" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextFieldLoopTestLoops" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jTextFieldLoopTestDelay" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jComboBoxQoSLoop" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="255" max="-2" attributes="0"/>
@@ -127,15 +155,8 @@
                               <Component id="jButtonConnect" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jButtonDisconnect" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jTextFieldTopic" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButtonTopicSubscribe" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButtonTopicUnsubscribe" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButtonTopicDisable" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jButtonTopicEnable" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
+                          <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
+                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jTextFieldMessage" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -262,6 +283,48 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="5"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jComboBoxQoSSubscribe">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="QoS_0"/>
+                    <StringItem index="1" value="QoS_1"/>
+                    <StringItem index="2" value="QoS_2"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jComboBoxQoSLoop">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="QoS_0"/>
+                    <StringItem index="1" value="QoS_1"/>
+                    <StringItem index="2" value="QoS_2"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="jComboBoxQoSSend">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="QoS_0"/>
+                    <StringItem index="1" value="QoS_1"/>
+                    <StringItem index="2" value="QoS_2"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

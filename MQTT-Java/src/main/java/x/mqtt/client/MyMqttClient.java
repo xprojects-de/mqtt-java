@@ -115,12 +115,12 @@ public class MyMqttClient {
     }
   }
 
-  public void subscribe(String topic, MyIMqttMessageListener ml) {
+  public void subscribe(String topic, int QOS, MyIMqttMessageListener ml) {
     try {
       if (!this.topicListeners.containsKey(topic)) {
         MyMqttMessageListener l = new MyMqttMessageListener(ml);
         this.topicListeners.put(topic, l);
-        this.mqttClient.subscribe(topic, l.getMl());
+        this.mqttClient.subscribe(topic, QOS, l.getMl());
       }
     } catch (Exception me) {
       me.printStackTrace();
