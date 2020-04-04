@@ -32,6 +32,10 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
   public static BlockingQueue queue = new ArrayBlockingQueue(10000);
   public static Object mutex = new Object();
   private Thread consumer = new Thread(this);
+  public static long lastTstamp = System.currentTimeMillis();
+  public static int msgCounter = 0;
+  public static long lastTstamp5 = System.currentTimeMillis();
+  public static int msgCounter5 = 0;
 
   /**
    * Creates new form TestFrame
@@ -42,13 +46,17 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
     ml = new MyIMqttMessageListener() {
       @Override
       public void messageArrived(String topic, MqttMessage message) throws Exception {
-        TestFrame.queue.put(new ReceiveMessage(message));
+        TestFrame.queue.put(new ReceiveMessage(message, TestFrame.lastTstamp, TestFrame.msgCounter));
+        TestFrame.lastTstamp = System.currentTimeMillis();
+        TestFrame.msgCounter++;
       }
     };
     ml5 = new MyIMqtt5MessageListener() {
       @Override
       public void messageArrived(Mqtt5Publish message) throws Exception {
-        TestFrame.queue.put(new ReceiveMessage5(message));
+        TestFrame.queue.put(new ReceiveMessage5(message, TestFrame.lastTstamp5, TestFrame.msgCounter5));
+        TestFrame.lastTstamp5 = System.currentTimeMillis();
+        TestFrame.msgCounter5++;
       }
     };
   }
@@ -553,7 +561,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           byte[] t = ((ReceiveMessage) rm).getM().getPayload();
           if (t[0] == (byte) 0xac && t[1] == (byte) 0xdc) {
             long elapsedTime = ((ReceiveMessage) rm).getTstamp() - TestFrame.bytesToLong(t, 2);
-            System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage) rm).getM().isRetained() + " Bytes: " + t.length);
+            System.out.println("Counter: " + ((ReceiveMessage) rm).getMsgCounter() + " Delta: " + ((ReceiveMessage) rm).getDeltatstamp() + " Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage) rm).getM().isRetained() + " Bytes: " + t.length);
           } else {
             String msg = new String(t);
             ObjectMapper mapper = new ObjectMapper();
@@ -568,7 +576,7 @@ public class TestFrame extends javax.swing.JFrame implements Runnable {
           byte[] t = ((ReceiveMessage5) rm).getM().getPayloadAsBytes();
           if (t[0] == (byte) 0xac && t[1] == (byte) 0xdc) {
             long elapsedTime = ((ReceiveMessage5) rm).getTstamp() - TestFrame.bytesToLong(t, 2);
-            System.out.println("Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Bytes: " + t.length);
+            System.out.println("Counter: " + ((ReceiveMessage5) rm).getMsgCounter() + " Delta: " + ((ReceiveMessage5) rm).getDeltatstamp() + " Elapsed: " + elapsedTime + " Retained: " + ((ReceiveMessage5) rm).getM().isRetain() + " Bytes: " + t.length);
           } else {
             String msg = new String(t);
             ObjectMapper mapper = new ObjectMapper();
