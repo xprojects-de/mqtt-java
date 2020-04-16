@@ -1,0 +1,13 @@
+
+1. Server: apt install ./vernemq.....deb
+3. Check service: systemctl status vernemq.service and systemctl restart vernemq.service
+
+5. Generate pw
+   => vmq-passwd -c /etc/vernemq/vmq.passwd xprojects # Here you have to enter the Password like xprojects
+   - c  = create file, -u = update file and -d = delete user in filer
+
+6. Check Config-File
+   => nano /etc/vernemq/vernemq.con
+10. generate an ACL-List
+  => nano /etc/vernemq/vmq.acl
+Here can you set the topic auths

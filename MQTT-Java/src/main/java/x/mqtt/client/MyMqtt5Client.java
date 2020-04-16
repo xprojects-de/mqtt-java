@@ -27,7 +27,7 @@ public class MyMqtt5Client {
               });
     }
   }
-  
+
   public void connect(String clientId, String host, int port, String user, String password, boolean ssl_tls) throws Exception {
     if (this.mqttClient == null) {
       this.mqttClient = MqttClient.builder()
@@ -43,7 +43,11 @@ public class MyMqtt5Client {
               .applySimpleAuth()
               .send()
               .whenComplete((connAck, throwable) -> {
-                System.out.println("connected");
+                if (connAck != null) {
+                  System.out.println("connected");
+                }
+                throwable.printStackTrace();
+
               });
     }
   }
